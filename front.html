@@ -26,12 +26,20 @@
         element.scrollTop = element.scrollHeight;
     }
     
+    // global
     var track00 = make_track();
     var state = make_state();
-    var ui = make_ui(track00,state);
-    state.player_list[1].ai = false;
-    //state.player_list[2].cards[0] = card_bear;
-
+    var ui;
+    
+    function restart(){   
+        track00 = make_track();
+        state = make_state();
+        ui = make_ui(track00,state);
+        state.player_list[1].ai = false;
+        for(var i=1;i<5;i++){
+            rand_card(track00,state,i);
+        }
+    }
     
     function proceed(){
         state.p = state.p % 4 + 1;
@@ -82,6 +90,7 @@
     var c=document.getElementById("myCanvas");
     var ctx=c.getContext("2d");
     
+    restart();
     add_listener(c,ui,refresh);
     
     refresh();
