@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Test abc123</title>
+<script src="fun.js"></script>
+<script src="render.js"></script>
+<script src="ai.js"></script>
+<link rel="stylesheet" type="text/css" href="page.css">
+</head>
+
+<div class="flex-container">   
+    <div id="canvas-container">
+        <canvas id="myCanvas" width="1000" height="560" style="border:1px solid #000000;">
+        </canvas> 
+    </div>
+    <div class="flex-item" id="console-log" border="1px"></div>
+</div>
+
+<script>
+    function add_log(t){
+        var para = document.createElement("p");
+        //var node = document.createTextNode(t);
+        para.innerHTML = (t);
+        var element = document.getElementById("console-log");
+        element.appendChild(para);
+        element.scrollTop = element.scrollHeight;
+    }
+    
+    var track00 = make_track();
+    var state = make_state();
+    var ui = make_ui(track00,state);
+    state.player_list[1].ai = false;
+    //state.player_list[2].cards[0] = card_bear;
+
+    
+    function proceed(){
+        state.p = state.p % 4 + 1;
+        if(state.player_list[state.p].bankrupt){
+            proceed();
+        }
+        ui.player = state.p;
+        ui.ai = state.player_list[state.p].ai;
+    }
+    function check_bankrupt(){
+        var a = asset_sum(track00,state,state.p);
+        var w = state.player_list[state.p].wealth;
+        if (a+w<0){
+            bankrupt(track00,state,state.p);
+        }
+        var n = 0;
+        for (var i=1;i<state.player_list.length;i++){
+            n += 1-state.player_list[i].bankrupt;
+        }
+        if (n<=1){
+            state.over = true;
+            render(ctx,track00,state,ui);
+            add_log("Game Over");
+        }
+    }
+    function refresh(){       
+        check_turn(state);
+        render(ctx,track00,state,ui);
+        if(state.over){
+            return;
+        }
+        if (state.player_list[state.p].ai){
+            ai_control(track00,state,state.p); 
+            ui.tile_num = state.player_list[ui.player].pos;
+            setTimeout(refresh,100);
+        }
+    }
+    function check_turn(state){
+        if(state.over){
+            return;
+        }
+        if(state.q==null && state.rolled==true){
+            state.rolled = false;
+            check_bankrupt();
+            proceed();
+        }
+    }
+    var c=document.getElementById("myCanvas");
+    var ctx=c.getContext("2d");
+    
+    add_listener(c,ui,refresh);
+    
+    refresh();
+</script>
+</html>

@@ -1,0 +1,25 @@
+#canvas-container {
+   width: 100%;
+   text-align:center;
+}
+
+canvas {
+   display: inline;
+}
+
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-item {
+    margin: 10px;
+}
+
+#console-log {
+    border: 1px solid black;
+    width: 200px;
+    height: 560px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
