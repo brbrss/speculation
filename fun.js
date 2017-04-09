@@ -344,6 +344,7 @@ function build(state,track,num,buyer,amt){
     }else{
         state.price[group] += 20;
     }
+    add_log(state.player_list[buyer].desc+" upgraded "+num+" for "+money(amt)+" from ");
 }
 
 function q_buy(state,track,num,buyer){
